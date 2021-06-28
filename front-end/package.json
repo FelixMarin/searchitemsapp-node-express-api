@@ -1,13 +1,18 @@
 {
   "name": "front-end",
-  "version": "1.0.0",
+  "version": "0.0.1",
+  "private":true,
   "description": "",
+    "repository": {
+	"type": "git",
+	"url": "https://github.com/FelixMarin/searchitemsapp-node-express-api.git"
+	},
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Felix Marin Ramirez",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1"
