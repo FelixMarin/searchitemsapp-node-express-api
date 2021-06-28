@@ -26,6 +26,7 @@ const getDocument = async (req) => {
   const url = company.url; 
 
   const browser = await Puppeteer.launch({
+    executablePath: './node_modules/puppeteer/.local-chromium/linux-884014/chrome-linux/chrome',
     headless: true,
     args: ['--no-sandbox','--headless']
   });
