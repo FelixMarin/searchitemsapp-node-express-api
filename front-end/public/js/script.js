@@ -153,8 +153,8 @@ const enviar = () => {
         
         let selectGroup = document.createElement("select");
 
-        selectGroup.addEventListener('change',() => {
-            let opcion = this.options[this.selectedIndex].value;
+        selectGroup.addEventListener('change',function(elem) {
+            let opcion = elem.target.value;
             if(opcion == 1) {               
                 elemOrdenarDown[0].checked = true;
             } else {
@@ -234,7 +234,7 @@ const traerProductos = (producto, ordenar, strEmpresas) => {
         
         $.ajax({
             type: "GET",
-            url: elem === 'MERCADONA' ? 'http://localhost:3000/mercadona/' + producto : "http://localhost:3000/search/" + producto + "/" + elem,
+            url:  getUrlService(elem, producto),
             dataType: "text",
             timeout: 1000000,
             beforeSend: () => {                    
@@ -282,10 +282,17 @@ const traerProductos = (producto, ordenar, strEmpresas) => {
                     bufferProducts = bufferProducts
                     .filter(elem => elem != null)
                     .filter(elem => elem.unit_price != undefined)
-                    .filter(elem => elem.reference_price != undefined);;
-                
+                    .filter(elem => elem.reference_price != undefined);
+                    
+                    bufferProducts.forEach(elem => {
+                        if(elem.name === 'MERCADONA') {
+                            elem.unit_price = elem.unit_price.replace('.', ',');
+                            elem.reference_price = elem.reference_price.replace('.', ',');
+                        }
+                    });
+
                     if(ordenar == 1) {
-                        bufferProducts = bufferProducts
+                        bufferProducts = bufferProducts                        
                         .sort((a,b) => (
                             a.unit_price.match(regex)[0] > b.unit_price.match(regex)[0]) ? 1 : ((b.unit_price.match(regex)[0] > a.unit_price.match(regex)[0]) ? -1 : 0)
                         );
@@ -304,16 +311,35 @@ const traerProductos = (producto, ordenar, strEmpresas) => {
 
             }).fail((event) => {
                 console.log(event);
-                strEmpresas = strEmpresas.filter(nomEmpresa => nomEmpresa === elem);
-                if(counter === 1) {
-                    alert('La sesión ha finalizado. Inicie sesión de nuevo.');
-                }
+                console.log('Failure: ' + elem);
                 counter++;
             });
     });
 }
 
-const liveSearch = function(keyword) {
+const getUrlService = (companyname, productname) => {
+
+    let url = '';
+
+    switch (companyname) {
+        case 'MERCADONA':
+            url = 'http://localhost:3000/' + companyname + '/' + productname;
+            break;
+        case 'DIA':
+        case 'CAPRABO':
+        case 'CONDIS':
+        case 'AMAZON':
+            url = 'http://localhost:3000/search/' + productname + "/" + companyname;
+            break;
+        default:
+            url = 'http://localhost:3000/searchbrowser/' + productname + "/" + companyname;
+            break;
+    }
+
+    return url;
+};
+
+const liveSearch = (keyword) => {
 
     let posicion = 0;
 	

@@ -1,8 +1,10 @@
 module.exports = (app) => {
-    const sc = require('../controllers/search.controller.js');
+    const brw = require('../controllers/browse.controller.js');
 
     // Find a company by name
-    app.get('/search/:product/:companyname', sc.search);
+    app.get('/search/:product/:companyname', brw.scrapperGet);
 
-    app.get('/mercadona/:product', sc.mercadona);
+    app.get('/searchbrowser/:product/:companyname', brw.scrapeBrowser);
+
+    app.get('/:companyname/:product', brw.scrapperPostMercadona);
 };
